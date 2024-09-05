@@ -12,21 +12,6 @@ jobs:
           # - sg2002_recamera_emmc
           - sg2002_recamera_sd
 
-    steps:
-      - name: Determine tag name
-        id: tag-name
-        run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "Tag name provided through workflow_dispatch: ${{ github.event.inputs.tag_name }}"
-            echo "tag_name=${{ github.event.inputs.tag_name }}" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event_name }}" == "create" ]; then
-            echo "Tag name provided through create event: ${GITHUB_REF#refs/tags/}"
-            echo "tag_name=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
-          else
-            echo "Unknown event type"
-            exit 1
-          fi
-
       - name: Checkout code
         uses: actions/checkout@v4.1.7
         with:
@@ -37,7 +22,7 @@ jobs:
         env:
           CURRENT_TARGET: ${{ matrix.target }}
         run: |
-          TAG=${{ steps.tag-name.outputs.tag_name }}
+          TAG="openhd"
           echo TAG=$TAG
 
           # Get the title and content of CHANGELOG.md entry
@@ -129,7 +114,7 @@ jobs:
           # Todo: avoid confilict
           sleep $((RANDOM % 30))
 
-          TAG=${{ steps.tag-name.outputs.tag_name }}
+          TAG="openhd"
           RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG"
           RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $RELEASE_URL)
           RELEASE_EXISTS=$(echo $RESPONSE | jq -r '.message // empty')
