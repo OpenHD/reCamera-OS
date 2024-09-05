@@ -12,45 +12,11 @@ jobs:
           # - sg2002_recamera_emmc
           - sg2002_recamera_sd
     steps:
-    
+
       - name: Checkout code
         uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 1
-
-      - name: Get CHANGELOG.md entry
-        id: changelog
-        env:
-          CURRENT_TARGET: ${{ matrix.target }}
-        run: |
-          TAG="openhd"
-          echo TAG=$TAG
-
-          # Get the title and content of CHANGELOG.md entry
-          TITLE=$(grep "^## ${TAG}" CHANGELOG.md | awk '{print $2" "$3}' | tr -d '\n')
-          echo $TITLE
-          echo "changelog_title=$TITLE" >> $GITHUB_OUTPUT
-          CONTENT=$(mktemp)
-          awk 'BEGIN {flag=0} /^## '${TAG}'/ {flag=1} flag {if (NF && !/^## /) {print}} /^## / && !/^## '${TAG}'/ {flag=0}' CHANGELOG.md > "$CONTENT"
-          echo "changelog_content="$CONTENT"" >> $GITHUB_OUTPUT
-          cat $CONTENT
-
-          # Check if title and content are not empty
-          if [ -z "$TITLE" ]; then echo "Title is empty. Exiting with status 1."; exit 1; fi
-          if [ ! -s "$CONTENT" ]; then echo "Content is empty. Exiting with status 1."; exit 1; fi
-
-          # Check if target is in the $CONTENT
-          if grep -q "### ${CURRENT_TARGET}" "$CONTENT"; then
-            echo "Found target in CONTENT: ${CURRENT_TARGET}"
-            echo "skip_workflow=false" >> $GITHUB_OUTPUT
-          else
-            echo "Target not found in CONTENT: ${CURRENT_TARGET}"
-            echo "skip_workflow=true" >> $GITHUB_OUTPUT
-          fi
-
-          # Watch log
-          echo GITHUB_OUTPUT=$GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
 
       - name: Install dependencies
         if: steps.changelog.outputs.skip_workflow == 'false'
