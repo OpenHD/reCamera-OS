@@ -11,7 +11,8 @@ jobs:
         target:
           # - sg2002_recamera_emmc
           - sg2002_recamera_sd
-
+    steps:
+    
       - name: Checkout code
         uses: actions/checkout@v4.1.7
         with:
