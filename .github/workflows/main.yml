@@ -19,7 +19,6 @@ jobs:
           fetch-depth: 1
 
       - name: Install dependencies
-        if: steps.changelog.outputs.skip_workflow == 'false'
         run: |
           sudo apt-get remove aria2 ansible shellcheck rpm xorriso zsync \
           clang-6.0 lldb-6.0 lld-6.0 clang-format-6.0 clang-8 lldb-8 lld-8 clang-format-8 \
