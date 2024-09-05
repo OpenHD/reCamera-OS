@@ -1,16 +1,7 @@
 name: Build and Create Release on Tag
 
 on:
-  create:
-    tags: 
-      - '**' # match all tags
-
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: 'Tag name for the release'
-        required: true
-        type: string
+  push:
 
 jobs:
   build-and-release:
@@ -18,7 +9,7 @@ jobs:
     strategy:
       matrix:
         target:
-          - sg2002_recamera_emmc
+          # - sg2002_recamera_emmc
           - sg2002_recamera_sd
 
     steps:
