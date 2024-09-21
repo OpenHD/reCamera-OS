@@ -9,8 +9,8 @@ jobs:
     strategy:
       matrix:
         target:
-          # - sg2002_recamera_emmc
-          - sg2002_recamera_sd
+          - sg2002_recamera_emmc
+          #- sg2002_recamera_sd
     steps:
 
       - name: Checkout code
