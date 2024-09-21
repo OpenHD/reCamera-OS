@@ -78,5 +78,4 @@ jobs:
         with:
           name: "upload"
           path: |
-            *
-            ${{ steps.uploader.outputs.ota_path }}
+            output/${{ matrix.target }}/install/soc_${{ matrix.target }}
