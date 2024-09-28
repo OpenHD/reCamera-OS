@@ -10,7 +10,7 @@ OPENHD_SITE_METHOD = git
 OPENHD_GIT_SUBMODULES = YES
 
 # The specific commit or tag to checkout
-OPENHD_VERSION = fbb6ed1ffe00b66e1d32fd9c9b5830b84d3a9c4b
+OPENHD_VERSION = 94c753c87172fb273e7483b670a629d585aff60b
 
 # Enable Git submodules if the project requires them
 OPENHD_GIT_SUBMODULES = YES
