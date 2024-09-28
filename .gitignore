@@ -32,8 +32,3 @@ output*/
 
 # vscode generated files
 .vscode*
-freertos
-host-tools
-linux_5.10
-oss
-ramdisk
