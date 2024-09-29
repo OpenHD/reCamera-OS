@@ -9,9 +9,6 @@ OPENHD_SITE = https://github.com/OpenHD/OpenHD.git
 OPENHD_SITE_METHOD = git
 OPENHD_GIT_SUBMODULES = YES
 
-# The specific commit or tag to checkout
-OPENHD_VERSION = 9689685031b0b0506e4c5e10927b78df43f55d0f
-
 # Enable Git submodules if the project requires them
 OPENHD_GIT_SUBMODULES = YES
 
