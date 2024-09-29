@@ -5,7 +5,7 @@
 ################################################################################
 
 # The Git repository from which to clone the source code
-OPENHD_SITE = https://github.com/OpenHD/OpenHD.git
+OPENHD_SITE = https://github.com/raphaelscholle/OpenHD.git
 OPENHD_SITE_METHOD = git
 OPENHD_GIT_SUBMODULES = YES
 
