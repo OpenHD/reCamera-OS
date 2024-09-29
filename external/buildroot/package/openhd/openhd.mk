@@ -33,7 +33,7 @@ define OPENHD_BUILD_CMDS
     $(TARGET_CONFIGURE_OPTS) \
     cmake -DCMAKE_INSTALL_PREFIX=$(TARGET_DIR) \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_PREFIX_PATH=$(STAGING_DIR)/usr/lib/cmake/Poco \
+          -DCMAKE_PREFIX_PATH=/usr/lib/cmake/Poco \
           $(OPENHD_CONF_OPTS) \
           $(@D)
 endef
