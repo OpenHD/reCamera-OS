@@ -33,10 +33,11 @@ define OPENHD_BUILD_CMDS
     $(TARGET_CONFIGURE_OPTS) \
     cmake -DCMAKE_INSTALL_PREFIX=$(TARGET_DIR) \
           -DCMAKE_BUILD_TYPE=Release \
-          -DPoco_DIR=/opt/reCamera/output/sg2002_recamera_emmc/buildroot-2021.05/output/cvitek_CV181X_musl_riscv64/build/poco-1.10.1 \
+          -DCMAKE_PREFIX_PATH=$(STAGING_DIR)/usr/lib/cmake/poco \
           $(OPENHD_CONF_OPTS) \
           $(@D)
 endef
+
 
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
