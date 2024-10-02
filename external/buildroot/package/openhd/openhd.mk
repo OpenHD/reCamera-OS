@@ -13,7 +13,7 @@ OPENHD_GIT_SUBMODULES = YES
 OPENHD_GIT_SUBMODULES = YES
 
 # Subdirectory inside the Git repo, if needed (if OpenHD is not in the root)
-OPENHD_SUBDIR = OpenHD/
+OPENHD_SUBDIR = OpenHD
 
 # No need to install to the staging directory, only target
 OPENHD_INSTALL_STAGING = NO
