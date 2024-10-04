@@ -21,10 +21,10 @@ OPENHD_INSTALL_STAGING = NO
 OPENHD_INSTALL_TARGET = YES
 
 # Additional configuration options for the CMake build
-OPENHD_CONF_OPTS = -DENABLE_USB_CAMERAS=OFF
+OPENHD_CONF_OPTS = -DENABLE_USB_CAMERAS=OFF -DCMAKE_PREFIX_PATH=/usr/lib/cmake/Poco
 
 # List of dependencies that must be built before OpenHD
-OPENHD_DEPENDENCIES = libsodium gstreamer1 gst1-plugins-base libpcap host-pkgconf poco
+OPENHD_DEPENDENCIES = libsodium gstreamer1 gst1-plugins-base libpcap host-pkgconf
 
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
