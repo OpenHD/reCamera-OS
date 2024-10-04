@@ -8,7 +8,9 @@
 OPENHD_SITE = https://github.com/raphaelscholle/OpenHD.git
 OPENHD_SITE_METHOD = git
 OPENHD_GIT_SUBMODULES = YES
-OPENHD_VERSION = 2e7d53e50065fa4fc1e3c0395d990270cda1de02
+
+# Set the version to the latest commit of the default branch
+OPENHD_VERSION = 2.6-evo
 
 # Enable Git submodules if the project requires them
 OPENHD_GIT_SUBMODULES = YES
