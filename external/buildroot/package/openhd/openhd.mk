@@ -5,7 +5,7 @@
 ################################################################################
 
 # The Git repository from which to clone the source code
-OPENHD_SITE = https://github.com/raphaelscholle/OpenHD.git
+OPENHD_SITE = https://github.com/openhd/OpenHD.git
 OPENHD_SITE_METHOD = git
 OPENHD_GIT_SUBMODULES = YES
 
@@ -26,7 +26,7 @@ OPENHD_INSTALL_TARGET = YES
 OPENHD_CONF_OPTS = -DENABLE_USB_CAMERAS=OFF
 
 # List of dependencies that must be built before OpenHD
-OPENHD_DEPENDENCIES = libsodium gstreamer1 gst1-plugins-base libpcap host-pkgconf
+OPENHD_DEPENDENCIES = libsodium gstreamer1 gst1-plugins-base libpcap host-pkgconf poco
 
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
