@@ -26,7 +26,7 @@ OPENHD_INSTALL_TARGET = YES
 OPENHD_CONF_OPTS = -DENABLE_USB_CAMERAS=OFF
 
 # List of dependencies that must be built before OpenHD
-OPENHD_DEPENDENCIES = libsodium gstreamer1 gst1-plugins-base libpcap host-pkgconf poco
+OPENHD_DEPENDENCIES = libsodium gstreamer1 gst1-plugins-base libpcap host-pkgconf
 
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
