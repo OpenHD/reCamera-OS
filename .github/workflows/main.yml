@@ -69,6 +69,7 @@ jobs:
         run: |
           echo `pwd`
           git submodule update --init --recursive --depth 1
+          ./scripts/repo_clone.sh --gitpull external/subtree.xml
           make ${{ matrix.target }}
           DIR=output/${{ matrix.target }}/install/soc_${{ matrix.target }}
           echo "output_dir=./$DIR" >> $GITHUB_OUTPUT
