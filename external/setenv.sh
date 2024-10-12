@@ -44,11 +44,9 @@ rsync_dir $EXTERNAL/build .
 rsync_dir $EXTERNAL/buildroot/ $BUILDROOT_DIR/
 echo "patching openhd into config.in"
 sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' "$BUILDROOT_DIR/package/Config.in"
-echo "patching poco"
-sed -i 's/c++14/c++17/g' buildroot-2021.05/package/poco/poco.mk
-rm -Rf buildroot-2021.05/package/poco/poco.hash
-sed -i 's|POCO_SITE = $(call github,pocoproject,poco,poco-$(POCO_VERSION)-release)|POCO_SITE = $(call github,OpenHD,poco,v$(POCO_VERSION))|' buildroot-2021.05/package/poco/poco.mk
-sed -i 's/1.10.1/1.13.3/g' buildroot-2021.05/package/poco/poco.mk
+echo "updating poco"
+rm -Rf buildroot-2021.05/package/poco/*
+mv -v external/updates/* buildroot-2021.05/package/poco/
 rsync_dir $EXTERNAL/isp_tuning .
 rsync_dir $EXTERNAL/ramdisk/ ramdisk/
 rsync_dir $EXTERNAL/u-boot/ $UBOOT_DIR/
