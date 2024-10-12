@@ -457,6 +457,9 @@ BR2_PACKAGE_LIBCURL_COOKIES_SUPPORT=y
 BR2_PACKAGE_LIBCURL_EXTRA_PROTOCOLS_FEATURES=y
 BR2_PACKAGE_LIBCURL_OPENSSL=y
 
+# Other
+BR2_PACKAGE_LIBPCAP=y
+
 #
 # vdr needs a glibc toolchain w/ C++, dynamic library, NPTL, wchar, headers >= 3.9
 #
