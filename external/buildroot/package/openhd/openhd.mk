@@ -3,6 +3,7 @@
 # OpenHD
 #
 ################################################################################
+$(info Building the OpenHD package...)
 
 # The Git repository from which to clone the source code
 OPENHD_SITE = https://github.com/openhd/OpenHD.git
@@ -32,7 +33,8 @@ OPENHD_CONF_OPTS = \
     -DCMAKE_SYSROOT=$(STAGING_DIR) \
     -DCMAKE_PREFIX_PATH=$(STAGING_DIR)/usr \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DPoco_DIR=$(STAGING_DIR)/usr/lib/cmake/Poco  # Tell CMake where to find Poco
 
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))

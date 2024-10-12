@@ -3,6 +3,8 @@
 # OpenHD
 #
 ################################################################################
+$(info Building the OpenHD template package...)
+
 OPENHD_SITE = https://github.com/OpenHD/OpenHD
 OPENHD_SITE_METHOD = git
 OPENHD_GIT_SUBMODULES = YES
