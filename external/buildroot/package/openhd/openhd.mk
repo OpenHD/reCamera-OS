@@ -34,7 +34,7 @@ OPENHD_CONF_OPTS = \
     -DCMAKE_PREFIX_PATH=$(STAGING_DIR)/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DPoco_DIR=$(STAGING_DIR)/usr/lib/cmake/Poco  # Tell CMake where to find Poco
+    -DPoco_DIR=$(STAGING_DIR)/usr/lib/cmake/Poco
 
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
