@@ -18,6 +18,7 @@ sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Co
 echo "updating poco"
 rm -Rf buildroot-2021.05/package/poco/*
 mv -v external/updates/* buildroot-2021.05/package/poco/
+ls -a external/updates/
 
 ###################################
 # rsync codes
