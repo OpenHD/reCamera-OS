@@ -11,6 +11,13 @@ function rsync_dir()
 }
 
 ###################################
+# updating packages before sync
+###################################
+echo "updating poco"
+rm -Rf buildroot-2021.05/package/poco/*
+mv -v external/updates/* buildroot-2021.05/package/poco/
+
+###################################
 # rsync codes
 ###################################
 mkdir -p $PROJECT_OUT
@@ -42,9 +49,6 @@ rsync_dir ./cvi_rtsp
 ###################################
 rsync_dir $EXTERNAL/build .
 rsync_dir $EXTERNAL/buildroot/ $BUILDROOT_DIR/
-echo "updating poco"
-rm -Rf buildroot-2021.05/package/poco/*
-mv -v external/updates/* buildroot-2021.05/package/poco/
 rsync_dir $EXTERNAL/isp_tuning .
 rsync_dir $EXTERNAL/ramdisk/ ramdisk/
 rsync_dir $EXTERNAL/u-boot/ $UBOOT_DIR/
