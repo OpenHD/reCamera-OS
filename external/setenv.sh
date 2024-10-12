@@ -13,13 +13,11 @@ function rsync_dir()
 ###################################
 # updating packages before sync
 ###################################
-ls -a external/updates/
-exit 1
 echo "patching openhd into config.in"
 sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' "$BUILDROOT_DIR/package/Config.in"
 echo "updating poco"
 rm -Rf buildroot-2021.05/package/poco/*
-mv -v external/updates/* buildroot-2021.05/package/poco/
+cp -v external/updates/* buildroot-2021.05/package/poco/
 
 
 ###################################
