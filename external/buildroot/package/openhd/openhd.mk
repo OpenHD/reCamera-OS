@@ -34,7 +34,9 @@ OPENHD_CONF_OPTS = \
     -DCMAKE_PREFIX_PATH=$(STAGING_DIR)/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DPoco_DIR=$(STAGING_DIR)/usr/lib/cmake/Poco
+    -DPoco_DIR=$(STAGING_DIR)/usr/lib/cmake/Poco \
+    -DPCAP_LIBRARY=$(STAGING_DIR)/usr/lib/libpcap.so \
+    -DPCAP_INCLUDE_DIR=$(STAGING_DIR)/usr/include
 
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
