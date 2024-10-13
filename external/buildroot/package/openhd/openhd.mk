@@ -38,5 +38,12 @@ OPENHD_CONF_OPTS = \
     -DPCAP_LIBRARY=$(STAGING_DIR)/usr/lib/libpcap.so \
     -DPCAP_INCLUDE_DIR=$(STAGING_DIR)/usr/include
 
+# Print the staging directory
+$(info The Staging Directory is: $(STAGING_DIR))
+
+# List all files in the staging directory
+$(info Listing all files in the staging directory:)
+$(shell find $(STAGING_DIR) -type f | xargs -I {} echo {})
+
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
