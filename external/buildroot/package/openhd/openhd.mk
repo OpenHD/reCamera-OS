@@ -28,16 +28,8 @@ OPENHD_DEPENDENCIES = poco libsodium gstreamer1 gst1-plugins-base libpcap host-p
 
 # Additional configuration options for the CMake build
 OPENHD_CONF_OPTS = \
-    -DENABLE_USB_CAMERAS=OFF \
-    -DCMAKE_TOOLCHAIN_FILE=$(BR2_TOOLCHAIN_FILE) \
-    -DCMAKE_SYSROOT=$(STAGING_DIR) \
-    -DCMAKE_PREFIX_PATH=$(STAGING_DIR)/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DPoco_DIR=$(STAGING_DIR)/usr/lib/cmake/Poco \
-    -DPCAP_LIBRARY=$(STAGING_DIR)/usr/lib/libpcap.so \
-    -DPCAP_INCLUDE_DIR=$(STAGING_DIR)/usr/include
-
+    -DENABLE_USB_CAMERAS=OFF 
+   
 # Print the staging directory
 $(info The Staging Directory is: $(STAGING_DIR))
 
