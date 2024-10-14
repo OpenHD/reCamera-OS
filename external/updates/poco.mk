@@ -26,7 +26,6 @@ POCO_OMIT = \
 	PageCompiler \
 	$(if $(BR2_PACKAGE_POCO_ACTIVERECORD),,ActiveRecord) \
 	$(if $(BR2_PACKAGE_POCO_CPP_PARSER),,CppParser) \
-	$(if $(BR2_PACKAGE_POCO_CRYPTO),,Crypto) \
 	$(if $(BR2_PACKAGE_POCO_DATA),,Data) \
 	$(if $(BR2_PACKAGE_POCO_DATA_MYSQL),,Data/MySQL) \
 	$(if $(BR2_PACKAGE_POCO_DATA_SQLITE),,Data/SQLite) \
@@ -34,8 +33,6 @@ POCO_OMIT = \
 	$(if $(BR2_PACKAGE_POCO_JSON),,JSON) \
 	$(if $(BR2_PACKAGE_POCO_JWT),,JWT) \
 	$(if $(BR2_PACKAGE_POCO_MONGODB),,MongoDB) \
-	Net \
-	$(if $(BR2_PACKAGE_POCO_NETSSL_OPENSSL),,NetSSL_OpenSSL) \
 	$(if $(BR2_PACKAGE_POCO_PDF),,PDF) \
 	$(if $(BR2_PACKAGE_POCO_PROMETHEUS),,Prometheus) \
 	$(if $(BR2_PACKAGE_POCO_REDIS),,Redis) \
@@ -44,7 +41,7 @@ POCO_OMIT = \
 	$(if $(BR2_PACKAGE_POCO_ZIP),,Zip)
 
 ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),y)
-POCO_CONF_OPTS += --no-fpenvironment --no-wstring
+POCO_CONF_OPTS += --no-fpenvironment --no-wstring --include=Net
 endif
 
 # architectures missing some FE_* in their fenv.h
