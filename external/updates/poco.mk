@@ -34,7 +34,7 @@ POCO_OMIT = \
 	$(if $(BR2_PACKAGE_POCO_JSON),,JSON) \
 	$(if $(BR2_PACKAGE_POCO_JWT),,JWT) \
 	$(if $(BR2_PACKAGE_POCO_MONGODB),,MongoDB) \
-	$(if $(BR2_PACKAGE_POCO_NET),,Net) \
+	Net \
 	$(if $(BR2_PACKAGE_POCO_NETSSL_OPENSSL),,NetSSL_OpenSSL) \
 	$(if $(BR2_PACKAGE_POCO_PDF),,PDF) \
 	$(if $(BR2_PACKAGE_POCO_PROMETHEUS),,Prometheus) \
