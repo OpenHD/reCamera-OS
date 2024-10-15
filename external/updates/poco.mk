@@ -22,6 +22,16 @@ POCO_DEPENDENCIES = \
 	$(if $(BR2_PACKAGE_POCO_NETSSL_OPENSSL),openssl) \
 	$(if $(BR2_PACKAGE_POCO_XML),expat)
 
+# Verbose echo statements to indicate the start of the build process
+define POCO_VERBOSE_MSG
+	@echo "***************************************************************************"
+	@echo "* Building Poco version $(POCO_VERSION)"
+	@echo "* Including components: Net"
+	@echo "* Excluding components: $(POCO_OMIT)"
+	@echo "* Using configuration options: $(POCO_CONF_OPTS)"
+	@echo "***************************************************************************"
+endef
+
 POCO_OMIT = \
 	Data/ODBC \
 	PageCompiler \
@@ -41,8 +51,9 @@ POCO_OMIT = \
 	$(if $(BR2_PACKAGE_POCO_XML),,XML) \
 	$(if $(BR2_PACKAGE_POCO_ZIP),,Zip)
 
-# Always include Net component
+# Always include Net component and echo that it's included
 POCO_CONF_OPTS += --include=Net
+$(info [INFO] Poco Net component included)
 
 ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),y)
 POCO_CONF_OPTS += --no-fpenvironment --no-wstring
@@ -66,6 +77,7 @@ POCO_LDFLAGS += -latomic
 endif
 
 define POCO_CONFIGURE_CMDS
+	$(POCO_VERBOSE_MSG)
 	(cd $(@D); $(TARGET_MAKE_ENV) ./configure \
 		--config=Linux \
 		--prefix=/usr \
@@ -79,6 +91,7 @@ endef
 
 # Use $(MAKE1) to avoid failures on heavily parallel machines (e.g. -j25)
 define POCO_BUILD_CMDS
+	@echo "[INFO] Building Poco with target $(POCO_MAKE_TARGET)"
 	$(TARGET_MAKE_ENV) $(MAKE1) POCO_TARGET_OSARCH=$(ARCH) CROSS_COMPILE=$(TARGET_CROSS) \
 		POCO_MYSQL_INCLUDE=$(STAGING_DIR)/usr/include/mysql \
 		POCO_MYSQL_LIB=$(STAGING_DIR)/usr/lib/mysql \
@@ -88,11 +101,13 @@ define POCO_BUILD_CMDS
 endef
 
 define POCO_INSTALL_STAGING_CMDS
+	@echo "[INFO] Installing Poco into the staging directory"
 	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR=$(STAGING_DIR) POCO_TARGET_OSARCH=$(ARCH) \
 		DEFAULT_TARGET=$(POCO_MAKE_TARGET) install -C $(@D)
 endef
 
 define POCO_INSTALL_TARGET_CMDS
+	@echo "[INFO] Installing Poco into the target directory"
 	$(TARGET_MAKE_ENV) $(MAKE) DESTDIR=$(TARGET_DIR) POCO_TARGET_OSARCH=$(ARCH) \
 		DEFAULT_TARGET=$(POCO_MAKE_TARGET) install -C $(@D)
 endef
