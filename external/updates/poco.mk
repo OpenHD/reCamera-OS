@@ -14,6 +14,7 @@ POCO_INSTALL_STAGING = YES
 POCO_DEPENDENCIES = \
 	pcre2 \
 	zlib \
+	openssl \
 	$(if $(BR2_PACKAGE_POCO_CRYPTO),openssl) \
 	$(if $(BR2_PACKAGE_POCO_DATA_MYSQL),mariadb) \
 	$(if $(BR2_PACKAGE_POCO_DATA_SQLITE),sqlite) \
@@ -40,8 +41,11 @@ POCO_OMIT = \
 	$(if $(BR2_PACKAGE_POCO_XML),,XML) \
 	$(if $(BR2_PACKAGE_POCO_ZIP),,Zip)
 
+# Always include Net component
+POCO_CONF_OPTS += --include=Net
+
 ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),y)
-POCO_CONF_OPTS += --no-fpenvironment --no-wstring --include=Net
+POCO_CONF_OPTS += --no-fpenvironment --no-wstring
 endif
 
 # architectures missing some FE_* in their fenv.h
@@ -73,7 +77,7 @@ define POCO_CONFIGURE_CMDS
 		--no-samples)
 endef
 
-# Use $(MAKE1) to avoid failures on heavilly parallel machines (e.g. -j25)
+# Use $(MAKE1) to avoid failures on heavily parallel machines (e.g. -j25)
 define POCO_BUILD_CMDS
 	$(TARGET_MAKE_ENV) $(MAKE1) POCO_TARGET_OSARCH=$(ARCH) CROSS_COMPILE=$(TARGET_CROSS) \
 		POCO_MYSQL_INCLUDE=$(STAGING_DIR)/usr/include/mysql \
