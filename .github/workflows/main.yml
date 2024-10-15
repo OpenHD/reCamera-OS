@@ -1,83 +1,26 @@
 name: Build and Create Release on Tag
 
 on:
-  create:
-    tags: 
-      - '**' # match all tags
-
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: 'Tag name for the release'
-        required: true
-        type: string
+  push:
 
 jobs:
   build-and-release:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         target:
           - sg2002_recamera_emmc
-          - sg2002_recamera_sd
-
+          #- sg2002_recamera_sd
     steps:
-      - name: Determine tag name
-        id: tag-name
-        run: |
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-            echo "Tag name provided through workflow_dispatch: ${{ github.event.inputs.tag_name }}"
-            echo "tag_name=${{ github.event.inputs.tag_name }}" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event_name }}" == "create" ]; then
-            echo "Tag name provided through create event: ${GITHUB_REF#refs/tags/}"
-            echo "tag_name=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
-          else
-            echo "Unknown event type"
-            exit 1
-          fi
 
       - name: Checkout code
         uses: actions/checkout@v4.1.7
         with:
           fetch-depth: 1
 
-      - name: Get CHANGELOG.md entry
-        id: changelog
-        env:
-          CURRENT_TARGET: ${{ matrix.target }}
-        run: |
-          TAG=${{ steps.tag-name.outputs.tag_name }}
-          echo TAG=$TAG
-
-          # Get the title and content of CHANGELOG.md entry
-          TITLE=$(grep "^## ${TAG}" CHANGELOG.md | awk '{print $2" "$3}' | tr -d '\n')
-          echo $TITLE
-          echo "changelog_title=$TITLE" >> $GITHUB_OUTPUT
-          CONTENT=$(mktemp)
-          awk 'BEGIN {flag=0} /^## '${TAG}'/ {flag=1} flag {if (NF && !/^## /) {print}} /^## / && !/^## '${TAG}'/ {flag=0}' CHANGELOG.md > "$CONTENT"
-          echo "changelog_content="$CONTENT"" >> $GITHUB_OUTPUT
-          cat $CONTENT
-
-          # Check if title and content are not empty
-          if [ -z "$TITLE" ]; then echo "Title is empty. Exiting with status 1."; exit 1; fi
-          if [ ! -s "$CONTENT" ]; then echo "Content is empty. Exiting with status 1."; exit 1; fi
-
-          # Check if target is in the $CONTENT
-          if grep -q "### ${CURRENT_TARGET}" "$CONTENT"; then
-            echo "Found target in CONTENT: ${CURRENT_TARGET}"
-            echo "skip_workflow=false" >> $GITHUB_OUTPUT
-          else
-            echo "Target not found in CONTENT: ${CURRENT_TARGET}"
-            echo "skip_workflow=true" >> $GITHUB_OUTPUT
-          fi
-
-          # Watch log
-          echo GITHUB_OUTPUT=$GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
-
       - name: Install dependencies
-        if: steps.changelog.outputs.skip_workflow == 'false'
         run: |
+          sudo apt update 
           sudo apt-get remove aria2 ansible shellcheck rpm xorriso zsync \
           clang-6.0 lldb-6.0 lld-6.0 clang-format-6.0 clang-8 lldb-8 lld-8 clang-format-8 \
           clang-9 lldb-9 lld-9 clangd-9 clang-format-9 \
@@ -115,14 +58,14 @@ jobs:
 
           sudo apt-get update
           sudo apt-get install -y build-essential ninja-build automake autoconf libtool wget curl git gcc libssl-dev bc slib squashfs-tools android-sdk-libsparse-utils \
-          android-sdk-ext4-utils jq cmake python3-distutils tclsh scons parallel ssh-client tree python3-dev python3-pip device-tree-compiler libssl-dev ssh cpio \
-          squashfs-tools fakeroot libncurses5 flex bison mtools
+          jq genext2fs cmake python3-distutils tclsh scons parallel ssh-client tree python3-dev python3-pip device-tree-compiler libssl-dev ssh cpio \
+          squashfs-tools fakeroot libncurses5 flex bison mtools libpoco-dev
+          sudo apt-get install -y pkg-config build-essential ninja-build automake autoconf libtool wget curl git gcc libssl-dev bc slib squashfs-tools android-sdk-libsparse-utils jq python3-distutils scons parallel tree python3-dev python3-pip device-tree-compiler ssh cpio fakeroot libncurses5 flex bison libncurses5-dev genext2fs rsync unzip dosfstools mtools tcl openssh-client cmake expect libconfuse2
           sudo apt-get clean
           df -h
 
       - name: Build ${{ matrix.target }}
         id: build
-        if: steps.changelog.outputs.skip_workflow == 'false'
         run: |
           echo `pwd`
           git submodule update --init --recursive --depth 1
@@ -130,147 +73,11 @@ jobs:
           DIR=output/${{ matrix.target }}/install/soc_${{ matrix.target }}
           echo "output_dir=./$DIR" >> $GITHUB_OUTPUT
           du -h -d1
-      
-      - name: Check if release exists
-        id: check_release
-        if: steps.changelog.outputs.skip_workflow == 'false'
-        run: |
-          # Todo: avoid confilict
-          sleep $((RANDOM % 30))
+          ls -a
 
-          TAG=${{ steps.tag-name.outputs.tag_name }}
-          RELEASE_URL="https://api.github.com/repos/${{ github.repository }}/releases/tags/$TAG"
-          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $RELEASE_URL)
-          RELEASE_EXISTS=$(echo $RESPONSE | jq -r '.message // empty')
-          if [[ -n "$RELEASE_EXISTS" && "$RELEASE_EXISTS" == "Not Found" ]]; then
-            echo "Release for tag $TAG does not exist."
-            echo "tag_exist=false" >> $GITHUB_OUTPUT
-          else
-            echo "Release for tag $TAG already exists."
-            echo "tag_exist=true" >> $GITHUB_OUTPUT
-
-            UPLOAD_URL=$(echo "$RESPONSE" | jq -r '.upload_url // empty')
-            echo "upload_url=$UPLOAD_URL" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Create release ${{ steps.changelog.outputs.changelog_title }}
-        id: create_release
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.check_release.outputs.tag_exist == 'false'
-        uses: actions/create-release@v1.1.4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload to Github
+        uses: 'actions/upload-artifact@v4'
         with:
-          tag_name: ${{ steps.tag-name.outputs.tag_name }}
-          release_name: ${{ steps.changelog.outputs.changelog_title }}
-          body_path: ${{ steps.changelog.outputs.changelog_content }}
-          draft: false
-          prerelease: true
-
-      - name: Preparing upload
-        id: uploader
-        if: steps.changelog.outputs.skip_workflow == 'false'
-        run: |
-          URL=${{ steps.create_release.outputs.upload_url }}
-          if [ -z "$URL" ]; then
-            echo "upload_url=${{ steps.check_release.outputs.upload_url }}" >> $GITHUB_OUTPUT
-          else
-            echo "upload_url=${URL}" >> $GITHUB_OUTPUT
-          fi
-
-          # Preparing files to upload
-          OUTPUT=${{ steps.build.outputs.output_dir }}
-
-          file_suffixes=("md5sum.txt" "emmc.zip" "ota.zip" "recovery.zip" "sd.zip" "emmc_sd_compat.zip" "swu.zip")
-          for suffix in "${file_suffixes[@]}"; do
-            file_path=$(find $OUTPUT/ -maxdepth 1 -name "*${suffix}")
-            if [ -n "$file_path" ]; then
-                file_name=$(basename "$file_path")
-                variable_name="${suffix%.*}_path"
-                echo "${variable_name}=${file_path}" >> "$GITHUB_OUTPUT"
-                variable_name="${suffix%.*}_name"
-                echo "${variable_name}=${file_name}" >> "$GITHUB_OUTPUT"
-            else
-                echo "No ${suffix} file found in $OUTPUT"
-            fi
-          done
-
-          # watch log
-          echo GITHUB_OUTPUT=$GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
-
-      - name: Upload md5sum file
-        uses: actions/upload-release-asset@v1.0.2
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.uploader.outputs.md5sum_path != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.uploader.outputs.upload_url }}
-          asset_path: ${{ steps.uploader.outputs.md5sum_path }}
-          asset_name: ${{ steps.uploader.outputs.md5sum_name }}
-          asset_content_type: text/plain
-
-      - name: Upload emmc package
-        uses: actions/upload-release-asset@v1.0.2
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.uploader.outputs.emmc_path != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.uploader.outputs.upload_url }}
-          asset_path: ${{ steps.uploader.outputs.emmc_path }}
-          asset_name: ${{ steps.uploader.outputs.emmc_name }}
-          asset_content_type: application/zip
-
-      - name: Upload ota package
-        uses: actions/upload-release-asset@v1.0.2
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.uploader.outputs.ota_path != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.uploader.outputs.upload_url }}
-          asset_path: ${{ steps.uploader.outputs.ota_path }}
-          asset_name: ${{ steps.uploader.outputs.ota_name }}
-          asset_content_type: application/zip
-
-      - name: Upload recovery package
-        uses: actions/upload-release-asset@v1.0.2
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.uploader.outputs.recovery_path != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.uploader.outputs.upload_url }}
-          asset_path: ${{ steps.uploader.outputs.recovery_path }}
-          asset_name: ${{ steps.uploader.outputs.recovery_name }}
-          asset_content_type: application/zip
-
-      - name: Upload sd package
-        uses: actions/upload-release-asset@v1.0.2
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.uploader.outputs.sd_path != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.uploader.outputs.upload_url }}
-          asset_path: ${{ steps.uploader.outputs.sd_path }}
-          asset_name: ${{ steps.uploader.outputs.sd_name }}
-          asset_content_type: application/zip
-
-      - name: Upload emmc_sd_compat package
-        uses: actions/upload-release-asset@v1.0.2
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.uploader.outputs.emmc_sd_compat_path != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.uploader.outputs.upload_url }}
-          asset_path: ${{ steps.uploader.outputs.emmc_sd_compat_path }}
-          asset_name: ${{ steps.uploader.outputs.emmc_sd_compat_name }}
-          asset_content_type: application/zip
-
-      - name: Upload swu package
-        uses: actions/upload-release-asset@v1.0.2
-        if: steps.changelog.outputs.skip_workflow == 'false' && steps.uploader.outputs.swu_path != ''
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.uploader.outputs.upload_url }}
-          asset_path: ${{ steps.uploader.outputs.swu_path }}
-          asset_name: ${{ steps.uploader.outputs.swu_name }}
-          asset_content_type: application/zip
+          name: "upload"
+          path: |
+            output/${{ matrix.target }}/install/soc_${{ matrix.target }}
