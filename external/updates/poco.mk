@@ -15,9 +15,7 @@ POCO_DEPENDENCIES = \
     pcre2 \
     zlib \
     expat \
-    openssl \
-    sqlite \
-    mysql_client
+    openssl 
 
 # Log file for verbose output
 POCO_BUILD_LOG = poco_build.log
