@@ -52,7 +52,7 @@ POCO_OMIT = \
 	$(if $(BR2_PACKAGE_POCO_ZIP),,Zip)
 
 # Always include Net component and echo that it's included
-POCO_CONF_OPTS += --include=Net
+POCO_CONF_OPTS += -DENABLE_NET=ON
 $(info [INFO] Poco Net component included)
 
 ifeq ($(BR2_TOOLCHAIN_USES_UCLIBC),y)
