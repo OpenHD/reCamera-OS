@@ -80,8 +80,7 @@ define POCO_CONFIGURE_CMDS
         $(POCO_CONF_OPTS) \
         --unbundled \
         --no-tests \
-        --no-samples \
-        V=1) >> $(POCO_BUILD_LOG) 2>&1
+        --no-samples
 endef
 
 # Use $(MAKE1) to avoid failures with highly parallel builds, and log the build process to file
