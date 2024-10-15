@@ -28,24 +28,6 @@ define POCO_VERBOSE_MSG
     @echo "***************************************************************************"
 endef
 
-# Only include Foundation and Net, exclude everything else
-POCO_OMIT = \
-    PageCompiler \
-    Data \
-    Data/ODBC \
-    Data/MySQL \
-    Data/SQLite \
-    Data/PostgreSQL \
-    JSON \
-    JWT \
-    MongoDB \
-    PDF \
-    Prometheus \
-    Redis \
-    Util \
-    XML \
-    Zip
-
 # Always include Foundation and Net components
 POCO_CONF_OPTS += --minimal
 $(info [INFO] Poco Foundation and Net components included)
