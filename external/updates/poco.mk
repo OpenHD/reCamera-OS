@@ -47,7 +47,7 @@ POCO_OMIT = \
     Zip
 
 # Always include Foundation and Net components
-POCO_CONF_OPTS += -DENABLE_NET=ON -DENABLE_FOUNDATION=ON
+POCO_CONF_OPTS += --minimal
 $(info [INFO] Poco Foundation and Net components included)
 
 # Disable certain features based on toolchain (e.g., no fpenvironment for uClibc)
