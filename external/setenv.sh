@@ -17,9 +17,9 @@ echo "updating poco"
 rm -Rf buildroot-2021.05/package/poco/*
 cp -v external/updates/* buildroot-2021.05/package/poco/
 echo "removing old wifi drivers"
-linux_5.10/drivers/net/wireless/realtek/*
+rm -rf linux_5.10/drivers/net/wireless/realtek/*
 echo "injecting new wifi drivers"
-linux_5.10/drivers/net/wireless
+git clone https://github.com/openhd/rtl88x2eu/ linux_5.10/drivers/net/wireless/realtek/
 
 ###################################
 # rsync codes
