@@ -16,7 +16,10 @@ function rsync_dir()
 echo "updating poco"
 rm -Rf buildroot-2021.05/package/poco/*
 cp -v external/updates/* buildroot-2021.05/package/poco/
-
+echo "removing old wifi drivers"
+linux_5.10/drivers/net/wireless/realtek/*
+echo "injecting new wifi drivers"
+linux_5.10/drivers/net/wireless
 
 ###################################
 # rsync codes
