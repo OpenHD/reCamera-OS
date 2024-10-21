@@ -55,7 +55,7 @@ rsync_dir $EXTERNAL/build .
 rsync_dir $EXTERNAL/buildroot/ $BUILDROOT_DIR/
 echo "patching openhd into config.in"
 sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' "$BUILDROOT_DIR/package/Config.in"
-sed -i '/^[[:space:]]*source "package\/openhd\/Config\.in"/a\        source "package/openhd_rtl88x2eu/Config.in"' "$BUILDROOT_DIR/package/Config.in"
+sed -i '/menu "Audio and video applications"/a\        source "package/rtl8812eu-openhd/Config.in"' "$BUILDROOT_DIR/package/Config.in"
 rsync_dir $EXTERNAL/isp_tuning .
 rsync_dir $EXTERNAL/ramdisk/ ramdisk/
 rsync_dir $EXTERNAL/u-boot/ $UBOOT_DIR/
