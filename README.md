@@ -1,4 +1,4 @@
-- [1. Official reference](#1-official-reference)
+ - [1. Official reference](#1-official-reference)
 - [2. How to start](#2-how-to-start)
   - [2.1. Preparation](#21-preparation)
   - [2.2 Checkout code](#22-checkout-code)
